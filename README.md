@@ -25,14 +25,14 @@
   - show winning addresses for each week
   - display when voting is next open
 
-**Connection between front & back end (ethers.js or web3.js)**
+**Connection between front & back end (ethers.js or web3.js - inside front end files)**
 - Functions
   - get user address (using web3/ethers)
   - purchase shares (_`fallback`_ function)
   - get number of bids left (`balanceOf` function)
   - place bid (`bid` function)
   - get highest bid for a week (`highestBid` mapping)
-  - get time left from `startTime` & `endTime` (using)
+  - get time left from `endTime` (using)
   - optional: listener for when data changes on blockchain (updating without refreshing)
 
 **Back end (solidity+ remix smart contract)**
@@ -40,6 +40,8 @@
 - Store
   - allotted tokens (fractional shares) - could be equal to number of ethers submitted
   - current top bid for each week + account
+  - bids for each user per week
+- Handle open / closed bidding periods
 
 ### Links
 - [ERC20](https://eips.ethereum.org/EIPS/eip-20)
