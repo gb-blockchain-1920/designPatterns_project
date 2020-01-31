@@ -27,12 +27,12 @@
 
 **Connection between front & back end (ethers.js or web3.js)**
 - Functions
-  - get user address
+  - get user address (using web3/ethers)
   - purchase shares (_`fallback`_ function)
-  - get number of shares left (`balanceOf` function)
+  - get number of bids left (`balanceOf` function)
   - place bid (`bid` function)
   - get highest bid for a week (`highestBid` mapping)
-  - get time left from `startTime` & `endTime`
+  - get time left from `startTime` & `endTime` (using)
   - optional: listener for when data changes on blockchain (updating without refreshing)
 
 **Back end (solidity+ remix smart contract)**
@@ -40,20 +40,6 @@
 - Store
   - allotted tokens (fractional shares) - could be equal to number of ethers submitted
   - current top bid for each week + account
-- Additional functions beyond ERC20 functions
-  - `bid(week, amount)`
-  - _`fallback`_ function - purchase tokens
-  - `constructor` - specify number of shares available
-- Data structures
-  - `uint public startTime` & `uint public endTime`
-  - `mapping (address => uint) public allottedTokens`
-  - `mapping (address => uint) public remainingTokens`
-  - `mapping (uint => Bid) public highestBid;`
-  - `struct Bid {address, amount}`
-
-### Questions
-- if you get outbid, can you use those tokens elsewhere? (do the tokens get returned or are they one time bids)
-
 
 ### Links
 - [ERC20](https://eips.ethereum.org/EIPS/eip-20)
