@@ -14,7 +14,9 @@
 - `remainingBids` check how many bids are left for a user in the cycle
 
 ### To Do
-- [ ] implement closed & open bidding
+- [x] basic buy and bid implementation
+- [x] implement closed & open bidding
 - [ ] implement endTime
-- [ ] implement reset tokens for next cycle
+- [x] implement reset tokens for next cycle
 - [ ] user privacy? should everyone be able to see everyone's balances
+- [ ] write test cases
