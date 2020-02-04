@@ -61,6 +61,8 @@ contract BitBnBtoken is IERC20 {
       rate = _etherRate.mul(1e18); //rate => x ether = 1 token
       openVoting = true;
       weeksInSeason = 13;
+
+      endTime = block.timestamp + 120; //two minutes cycle
   }
 
   //method for purchasing tokens
@@ -90,6 +92,7 @@ contract BitBnBtoken is IERC20 {
 
   //method for placing bids
   function bid(uint256 _week, uint256 _amount) external {
+      require(block.timestamp < endTime, "bidding is now closed - if bidding should be open, please call toggleBidding"); //cannot bid even if toggleBidding has not been called
       require(openVoting == true, "bidding is not open yet");
       require(_week < weeksInSeason, "invalid week");
       uint256 topBid = highestBid[_week]._amount;
@@ -112,8 +115,9 @@ contract BitBnBtoken is IERC20 {
      contractOwner.transfer(address(this).balance);
   }
 
-  //toggle open vs closed bidding seasons
+  //toggle open vs closed bidding seasons (called by the app)
   function toggleBidding() public {
+      require(block.timestamp > endTime, "cannot toggle bidding - not time yet");
       if (openVoting == false) {
           //reset bidding tokens
           for (uint i = 0; i < users.length; i++) {
@@ -133,6 +137,7 @@ contract BitBnBtoken is IERC20 {
       }
 
       //insert code to call toggleBidding again at endTime
+      endTime = block.timestamp + 120;
   }
 
   /**
@@ -176,6 +181,7 @@ contract BitBnBtoken is IERC20 {
   function transfer(address to, uint256 value) public returns (bool) {
     require(value <= _balances[msg.sender]);
     require(to != address(0));
+    require(openVoting == false, "voting is currently open, transfer is closed"); //transfer between owners is closed during open voting
 
     _balances[msg.sender] = _balances[msg.sender].sub(value);
     _balances[to] = _balances[to].add(value);
@@ -217,6 +223,8 @@ contract BitBnBtoken is IERC20 {
     require(value <= _balances[from]);
     require(value <= _allowed[from][msg.sender]);
     require(to != address(0));
+    require(openVoting == false, "voting is currently open, transfer is closed"); //transfer between owners is closed during open voting
+
 
     _balances[from] = _balances[from].sub(value);
     _balances[to] = _balances[to].add(value);
@@ -224,4 +232,6 @@ contract BitBnBtoken is IERC20 {
     emit Transfer(from, to, value);
     return true;
   }
+
+
 }
