@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
+import Typography from "@material-ui/core/Typography";
 
 import PurchasePage from "./components/PurchasePage";
 import BidPage from "./components/BidPage";
@@ -24,6 +25,8 @@ const useStyles = makeStyles(theme => ({
 const App = () => {
   const classes = useStyles();
 
+  const [balance, setBalance] = React.useState(1);
+
   return (
     <Router>
       <AppBar position="static">
@@ -39,9 +42,12 @@ const App = () => {
           <Link to="/purchase">
             <Button>Purchase Shares</Button>
           </Link>
-          <Link to="/bid">
+          <Link to="/bid" className={classes.title}>
             <Button>Bid</Button>
           </Link>
+          <Typography>
+            {balance === null ? "" : `Balance: ${balance}`}
+          </Typography>
         </Toolbar>
       </AppBar>
       <Switch>
