@@ -383,3 +383,6 @@ exports.address =  "0xcfeb869f69431e42cdb54a4f4f105c19c080a601"
 
 // _shares,_EtherPrice
 exports.construct_params= [100,100]
+
+
+exports.owner= "0x00"

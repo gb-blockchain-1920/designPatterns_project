@@ -8,15 +8,8 @@ const contract= new web3.eth.Contract(
 )
 
 // Fixed call parameters to send to contract call
-
-const getAccounts = async()=>{
-    const accounts= await web3.eth.getAccounts() 
-    return accounts;
-}
-let accounts = getAccounts();
-console.log(accounts)
 let fixed_call= {
-        from: address0,
+        from: con.owner,
         gas: 3000000,
         gasPrice: 400000
 }
