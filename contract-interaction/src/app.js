@@ -2,19 +2,10 @@ const con = require('./bitBnBParams.js')
 const Web3 = require('web3')
 const port = 8545
 const web3=new Web3('http://localhost:'+port)
-// Owner needs to be defined
-
 const contract= new web3.eth.Contract(
     con.abi,
     con.address
 )
-
-const address0 = "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1";
-const address1 = "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1";
-const address2 = "0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b";
-const address3 = "0xE11BA2b4D45Eaed5996Cd0823791E0C93114882d";
-const address4 = "0xd03ea8624C8C5987235048901fB614fDcA89b117";
-
 
 // Fixed call parameters to send to contract call
 
@@ -52,7 +43,7 @@ exports.transferFrom= async function (from, to , value){
              result=res
              resolve(result)
             }).catch(err=>{
-               console.log(err)
+               console.error(err)
             })
             
          }).catch(err=>{
@@ -201,18 +192,3 @@ exports.transfer=async function(to, value){
     else
     console.error('Error: Invalid address or value')
 }
-
-
-this.transfer(address1, 12).then(res=>{
-    console.log(res)
- }).catch(err=>{console.error(err)})
-this.totalSupply(address0).then(res=>{
- console.log(res)
-})
-
-/*this.transferFrom(address1, address2, 10).then(res=>{
-    console.log(res)
-}).catch(err=>{
-    console.log(err)
-})
-*/
