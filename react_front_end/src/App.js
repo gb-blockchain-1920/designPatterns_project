@@ -48,10 +48,10 @@ const App = () => {
             <Button>Bid</Button>
           </Link>
           <Typography className={classes.title}>
-            {balance === null ? "" : `Bids Remaining This Week: ${balance}`}
+            {balance === null ? "" : `Bids Remaining This Period: ${balance}`}
           </Typography>
           <Typography className={classes.title}>
-            {totalShares === null ? "" : `Total Shares: ${totalShares}`}
+            {totalShares === null ? "" : `Total Shares Per Period: ${totalShares}`}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -61,6 +61,9 @@ const App = () => {
         </Route>
         <Route path="/bid">
           <BidPage />
+        </Route>
+        <Route path="/">
+          <PurchasePage />
         </Route>
       </Switch>
     </Router>

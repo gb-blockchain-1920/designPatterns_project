@@ -2,7 +2,6 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Countdown from "react-countdown-now";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -26,7 +25,6 @@ const useStyles = makeStyles(theme => ({
 export default function PurchasePage() {
   const classes = useStyles();
 
-  const [timeLeft, setTimeLeft] = React.useState(1000000);
   const [tokenBalance, setTokenBalance] = React.useState(10);
   const [amountToBuy, setAmountToBuy] = React.useState(0);
 
@@ -35,10 +33,7 @@ export default function PurchasePage() {
       <CssBaseline />
       <div className={classes.paper}>
         <Typography component="h1" variant="h5">
-          Time Left <Countdown date={Date.now() + timeLeft} />
-        </Typography>
-        <Typography component="h1" variant="h5">
-          Token Balance {tokenBalance}
+          Tokens Available for Purchase: {tokenBalance}
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
@@ -47,7 +42,7 @@ export default function PurchasePage() {
             required
             fullWidth
             id="number"
-            label="# of shares"
+            label="# of bids to be purchased (1 ETH = 1 bid)"
             name="number"
             type="number"
             autoFocus

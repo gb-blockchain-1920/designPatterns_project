@@ -10,6 +10,8 @@ import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
+import Countdown from "react-countdown-now";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -27,16 +29,20 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function createData(weekNumber, userBid, maxBid, isOpen) {
-  return { weekNumber, userBid, maxBid, isOpen };
-}
+// function createData(weekNumber, userBid, maxBid, isOpen) {
+//   return { weekNumber, userBid, maxBid, isOpen };
+// }
 
 export default function BidPage() {
   const classes = useStyles();
 
+  const [timeLeft, setTimeLeft] = React.useState(1000000);
   const [amountToBid, setAmountToBid] = React.useState(0);
+  const [bidWeek, setBidWeek] = React.useState(1);
+  const [openBidding, setOpenBidding] = React.useState(true);
 
-  const rows = [createData(1, 20, 30, true), createData(2, 25, 32, false)];
+  // const rows = [createData(1, 20, 30, true), createData(2, 25, 32, false)];
+  const rows = [...Array(13).keys()];
 
   return (
     <div>
@@ -49,21 +55,12 @@ export default function BidPage() {
                   <TableCell>Week #</TableCell>
                   <TableCell align="right">Your Bid</TableCell>
                   <TableCell align="right">Highest Bid</TableCell>
-                  <TableCell align="right">Bidding Status</TableCell>
+                  <TableCell align="right">Current Winner</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {rows.map(row => (
-                  <TableRow key={row.name}>
-                    <TableCell component="th" scope="row">
-                      {row.weekNumber}
-                    </TableCell>
-                    <TableCell align="right">{row.userBid}</TableCell>
-                    <TableCell align="right">{row.maxBid}</TableCell>
-                    <TableCell align="right">
-                      {row.isOpen ? "Open" : "Closed"}
-                    </TableCell>
-                  </TableRow>
+                  <BiddingRow week={row} />
                 ))}
               </TableBody>
             </Table>
@@ -77,13 +74,36 @@ export default function BidPage() {
                 margin="normal"
                 required
                 fullWidth
+                id="bid_week"
+                label="Bidding for week:"
+                name="week"
+                type="number"
+                autoFocus
+                value={bidWeek}
+                onChange={e => {
+                  if (e.target.value >= 1 && e.target.value <= 13) {
+                    setBidWeek(parseInt(e.target.value));
+                  } else if (e.target.value === "") {
+                    setBidWeek(e.target.value);
+                  }
+                }}
+              />
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
                 id="number"
-                label="# of shares"
+                label="Increase bid by:"
                 name="number"
                 type="number"
                 autoFocus
                 value={amountToBid}
-                onChange={e => setAmountToBid(parseInt(e.target.value))}
+                onChange={e => {
+                  if (e.target.value >= 0) {
+                    setAmountToBid(parseInt(e.target.value));
+                  }
+                }}
               />
               <Button
                 type="submit"
@@ -91,9 +111,15 @@ export default function BidPage() {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
+                disabled={!openBidding}
               >
-                Buy
+                Bid
               </Button>
+              <Typography component="h1" variant="h5" align="center">
+                Time remaining until bidding is{" "}
+                {openBidding ? "closed" : "opened"}:{" "}
+                <Countdown date={Date.now() + timeLeft} />
+              </Typography>
             </form>
           </Paper>
         </Grid>
@@ -101,3 +127,41 @@ export default function BidPage() {
     </div>
   );
 }
+
+const BiddingRow = ({ week }) => {
+
+  const [userBid, setUserBid] = React.useState(0);
+  const [topBid, setTopBid] = React.useState(0);
+  const [winner, setWinner] = React.useState("");
+
+  React.useEffect(() => {
+    //get userBid
+    //get topBid
+    //get current winner
+  }, [userBid, topBid, winner])
+
+  return (
+    <TableRow key={`week${week}`}>
+      <TableCell component="th" scope="row" key="week">
+        {week+1}
+      </TableCell>
+      <TableCell align="right" key="userbid">{userBid}</TableCell>
+      <TableCell align="right" key="topbid">{topBid}</TableCell>
+      <TableCell align="right" key="winner">{winner}</TableCell>
+    </TableRow>
+  );
+};
+
+// const BiddingRow = ({ data }) => {
+//
+//   return (
+//     <TableRow key={data.name}>
+//       <TableCell component="th" scope="row" key="week">
+//         {data.weekNumber}
+//       </TableCell>
+//       <TableCell align="right" key="userbid">{data.userBid}</TableCell>
+//       <TableCell align="right" key="topbid">{data.maxBid}</TableCell>
+//       <TableCell align="right" key="winner">{data.isOpen ? "Open" : "Closed"}</TableCell>
+//     </TableRow>
+//   );
+// };
