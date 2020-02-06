@@ -1,7 +1,7 @@
 // _shares,_EtherPrice
 exports.construct_params= [100,100]
-exports.owner= "0xdD696001EbF04965a977CD34E661AFFe3bEA085e"
-exports.address = "0x9090fbB28D27a85afFc1258A2A3972FD20fd3788"
+exports.owner= "0x00"
+exports.address =  "0xcfeb869f69431e42cdb54a4f4f105c19c080a601"
 exports.fixed_call= {
 	from: "0x0000",
 	gas: 3000000,
