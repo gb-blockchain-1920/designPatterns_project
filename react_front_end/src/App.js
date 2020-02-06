@@ -18,7 +18,8 @@ const useStyles = makeStyles(theme => ({
     marginRight: theme.spacing(2)
   },
   title: {
-    flexGrow: 1
+    flexGrow: 1,
+    textAlign: "right"
   }
 }));
 
@@ -26,6 +27,7 @@ const App = () => {
   const classes = useStyles();
 
   const [balance, setBalance] = React.useState(1);
+  const [totalShares, setTotalShares] = React.useState(1);
 
   return (
     <Router>
@@ -42,11 +44,14 @@ const App = () => {
           <Link to="/purchase">
             <Button>Purchase Shares</Button>
           </Link>
-          <Link to="/bid" className={classes.title}>
+          <Link to="/bid">
             <Button>Bid</Button>
           </Link>
-          <Typography>
-            {balance === null ? "" : `Balance: ${balance}`}
+          <Typography className={classes.title}>
+            {balance === null ? "" : `Bids Remaining This Week: ${balance}`}
+          </Typography>
+          <Typography className={classes.title}>
+            {totalShares === null ? "" : `Total Shares: ${totalShares}`}
           </Typography>
         </Toolbar>
       </AppBar>

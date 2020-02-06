@@ -1,13 +1,15 @@
 import React from "react";
-import { HorizontalBar } from "react-chartjs-2";
 import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import Countdown from "react-countdown-now";
-import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TableRow from "@material-ui/core/TableRow";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -17,7 +19,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: "center"
   },
   form: {
-    width: "100%", // Fix IE 11 issue.
+    width: "100%",
     marginTop: theme.spacing(1)
   },
   submit: {
@@ -25,37 +27,47 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+function createData(weekNumber, userBid, maxBid, isOpen) {
+  return { weekNumber, userBid, maxBid, isOpen };
+}
+
 export default function BidPage() {
   const classes = useStyles();
-  const bids = [4, 5, 6];
 
   const [amountToBid, setAmountToBid] = React.useState(0);
+
+  const rows = [createData(1, 20, 30, true), createData(2, 25, 32, false)];
 
   return (
     <div>
       <Grid container style={{ flexGrow: 1, margin: 10 }} spacing={2}>
         <Grid item xs={5}>
-          <Paper>
-            <HorizontalBar
-              labels={bids.map((val, index) => "Bid #" + index)}
-              data={{
-                labels: bids.map((val, index) => "Bid #" + index),
-                datasets: [
-                  {
-                    label: "Bids",
-                    backgroundColor: [
-                      "#3e95cd",
-                      "#8e5ea2",
-                      "#3cba9f",
-                      "#e8c3b9",
-                      "#c45850"
-                    ],
-                    data: bids
-                  }
-                ]
-              }}
-            ></HorizontalBar>
-          </Paper>
+          <TableContainer component={Paper}>
+            <Table className={classes.table} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Week #</TableCell>
+                  <TableCell align="right">Your Bid</TableCell>
+                  <TableCell align="right">Highest Bid</TableCell>
+                  <TableCell align="right">Bidding Status</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map(row => (
+                  <TableRow key={row.name}>
+                    <TableCell component="th" scope="row">
+                      {row.weekNumber}
+                    </TableCell>
+                    <TableCell align="right">{row.userBid}</TableCell>
+                    <TableCell align="right">{row.maxBid}</TableCell>
+                    <TableCell align="right">
+                      {row.isOpen ? "Open" : "Closed"}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Grid>
         <Grid item xs={5}>
           <Paper>
