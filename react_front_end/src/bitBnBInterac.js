@@ -6,13 +6,14 @@ const contract= new web3.eth.Contract(
     con.abi,
     con.address
 )
+web3.eth.getAccounts().then(res=>{
+    
+}).catch(err=>{
+    console.error('Error:',err.message)
+})
 
 // Fixed call parameters to send to contract call
-let fixed_call= {
-        from: con.owner,
-        gas: 3000000,
-        gasPrice: 400000
-}
+
 // Function checks if the given address is valid ethereum address
 function isAddress(address){
     return (web3.utils.isAddress(address))
@@ -29,10 +30,10 @@ exports.transferFrom= async function (from, to , value){
            if(isValidValue(value)){
         return new Promise((resolve,reject)=>{
         let result 
-         contract.methods.transferFrom(from,to,value).send(fixed_call).then(()=>{
+         contract.methods.transferFrom(from,to,value).send(con.fixed_call).then(()=>{
             
 
-            contract.methods.transferFrom(from,to,value).call(fixed_call).then(res=>{
+            contract.methods.transferFrom(from,to,value).call(con.sendfixed_call).then(res=>{
              result=res
              resolve(result)
             }).catch(err=>{
@@ -40,7 +41,7 @@ exports.transferFrom= async function (from, to , value){
             })
             
          }).catch(err=>{
-             reject('Error: Transcation unsuccessful')
+             reject(err.message + "\nError: Transcation unsuccesful")
          })
          
         })
@@ -60,15 +61,15 @@ exports.bid= async function (week, amount){
        if ((Number(week)>=1 && Number(week)<=52) && Number(amount) >=1){
         return new Promise((resolve, reject) => {
             let result
-            contract.methods.bid(Number(week),Number(amount)).send(fixed_call).then(()=>{
-                contract.methods.bid(Number(week),Number(amount)).call(fixed_call).then(res=>{
+            contract.methods.bid(Number(week),Number(amount)).send(con.fixed_call).then(()=>{
+                contract.methods.bid(Number(week),Number(amount)).call(con.fixed_call).then(res=>{
                     result = res
                     resolve(result)
                 }).catch(err=>{
                     console.error('Error: ',err)
                 })
             }).catch(err=>{
-                reject('Error: Transcation unsuccessful')
+                reject(err.message + "\nError: Transcation unsuccesful")
             }) 
           })  
    }
@@ -82,12 +83,12 @@ exports.bid= async function (week, amount){
 exports.withdraw=async function (){
     return new Promise((resolve, reject) => {
         let result
-        contract.methods.withdraw().call(fixed_call).then(res=>{
+        contract.methods.withdraw().call(con.fixed_call).then(res=>{
             result = res
             resolve(result)
             console.log(res)
         }).catch(err=>{
-            reject('Error: Transcation unsuccessful')
+            reject(err.message + "\nError: Transcation unsuccesful")
         }) 
       })  
 }
@@ -97,12 +98,12 @@ exports.withdraw=async function (){
 exports.totalSupply=async function(){
     return new Promise((resolve, reject) => {
         let result
-        contract.methods.totalSupply().call(fixed_call).then(res=>{
+        contract.methods.totalSupply().call(con.fixed_call).then(res=>{
             result = res
             resolve(result)
             console.log(res)
         }).catch(err=>{
-            reject('Error: Transcation unsuccessful')
+            reject(err.message + "\nError: Transcation unsuccesful")
         }) 
       })  
    
@@ -113,11 +114,11 @@ exports.balanceOf=async function(address){
     if(isAddress(address)){
     return new Promise((resolve,reject)=>{
         let result 
-        contract.methods.balanceOf(address).call(fixed_call).then(res=>{
+        contract.methods.balanceOf(address).call(con.fixed_call).then(res=>{
             result=res
             resolve(result)
         }).catch(err=>{
-            reject('Error: Transcation unsuccessful')
+            reject(err.message + "\nError: Transcation unsuccesful")
         })
     })
   }
@@ -130,11 +131,11 @@ exports.allowance=async function(owner, spender){
  if(isAddress(owner)&& isAddress(spender)&& owner != spender){
    return new Promise((resolve,reject)=>{
        let result 
-       contract.methods.allowance(owner,spender).call(fixed_call).then(res=>{
+       contract.methods.allowance(owner,spender).call(con.fixed_call).then(res=>{
            result=res
            resolve(result)
        }).catch(err=>{
-        reject('Error: Transcation unsuccessful')
+        reject(err.message + "\nError: Transcation unsuccesful")
        })
    })
  }
@@ -145,14 +146,14 @@ exports.allowance=async function(owner, spender){
 // Function calls the approve function in the contract 
 exports.approve=async function(spender, value){
        if (isAddress(spender) && Number(value) > 1){
-            contract.methods.approve(spender,value).send(fixed_call).then(()=>{
+            contract.methods.approve(spender,value).send(con.fixed_call).then(()=>{
                 return new Promise((resolve,reject)=>{
                     let result
-                   contract.methods.approve.call(fixed_Call).then(res=>{
+                   contract.methods.approve.call(con.fixed_Call).then(res=>{
                        result=res
                        resolve(result)
                    }).catch(err=>{
-                       reject('Error: Transcation unsuccessful')
+                       reject(err.message + "\nError: Transcation unsuccesful")
                    })
                 })
             }).catch(err=>{
@@ -167,15 +168,15 @@ exports.approve=async function(spender, value){
 // Function calls the transfer function in the contract
 exports.transfer=async function(to, value){
     if (isAddress(to) && Number(value) > 1){
-         contract.methods.transfer(to,value).send(fixed_call).then((data)=>{
+         contract.methods.transfer(to,value).send(con.fixed_call).then((data)=>{
              console.log(data);
              return new Promise((resolve,reject)=>{
                  let result
-                contract.methods.transfer.call(fixed_Call).then(res=>{
+                contract.methods.transfer.call(con.fixed_Call).then(res=>{
                     result=res
                     resolve(result)
                 }).catch(err=>{
-                    reject('Error: Transcation unsuccessful')
+                    reject(err.message + "\nError: Transcation unsuccesful")
                 })
              })
          }).catch(err=>{
@@ -184,4 +185,39 @@ exports.transfer=async function(to, value){
     }
     else
     console.error('Error: Invalid address or value')
+}
+
+
+// Function to call the toggleBidding transcation in the contract 
+exports.toggleBidding= async function(){
+    return new Promise((resolve,reject)=>{
+        let result
+        contract.methods.toggleBidding().send(con.fixed_call).then(res=>{
+            result=res
+            resolve(result)
+        }).catch(err=>{
+            reject(err.message + "\nError: Transcation unsuccesful")
+        })
+    })
+}
+
+// Function to call the fallback function 
+exports.fallback=async function(value){
+    if(Number(value)>0){
+    return new Promise((resolve,reject)=>{
+        let result
+        web3.eth.sendTransaction({
+            to: contract.options.address,
+            from: con.fixed_call.from,
+            value: web3.utils.fromWei(value, 'ether')
+        }).then(res=>{
+            result=res
+            resolve(result)
+        }).catch(err=>{
+            reject(err.message + "\nError: Transcation unsuccesful")
+        })
+    })
+}
+else
+console.error('Error: Invalid value entered (value> 0)')
 }
