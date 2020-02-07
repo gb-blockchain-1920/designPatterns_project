@@ -58,7 +58,7 @@ exports.transferFrom= async function (from, to , value){
 
 // Function to call a bid on a week with amount given
 exports.bid= async function (week, amount){
-       if ((Number(week)>=1 && Number(week)<=52) && Number(amount) >=1){
+       if ((Number(week)>=0 && Number(week)< 13) && Number(amount) >=1){
         return new Promise((resolve, reject) => {
             let result
             contract.methods.bid(Number(week),Number(amount)).send(con.fixed_call).then(()=>{
@@ -272,6 +272,19 @@ exports.getHighestBid=async function(week){
   return new Promise((resolve,reject)=>{
       let result
       contract.methods.highestBid(week).call(con.fixed_call).then(res=>{
+          result=res
+          resolve(result)
+      }).catch(err=>{
+          reject(err.message + "\nError: Transaction unsuccesful")
+      })
+  })
+}
+
+// Function to get highestBid parameter in the contract
+exports.getCurrentBid=async function(week){
+  return new Promise((resolve,reject)=>{
+      let result
+      contract.methods.currentBid(week, con.fixed_call.from).call(con.fixed_call).then(res=>{
           result=res
           resolve(result)
       }).catch(err=>{

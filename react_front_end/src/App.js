@@ -12,7 +12,6 @@ import {
   getEndTime,
   toggleBidding,
   getOpenVoting,
-  getHighestBid
 } from "./bitBnBInterac";
 
 import PurchasePage from "./components/PurchasePage";
@@ -48,7 +47,7 @@ const App = () => {
     remainingBids(userAddress).then(res => setBalance(res));
     getEndTime().then(res => setEndTime(parseInt(res)));
     getOpenVoting().then(res => setBiddingIsOpen(res));
-  }, []);
+  }, [biddingIsOpen]);
 
   React.useEffect(() => {
 
