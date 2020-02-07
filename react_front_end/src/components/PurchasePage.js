@@ -5,6 +5,8 @@ import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { fallback, balanceOf } from "../bitBnBInterac"
+import { address as contractAddress } from "../bitBnBParams";
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -25,8 +27,17 @@ const useStyles = makeStyles(theme => ({
 export default function PurchasePage() {
   const classes = useStyles();
 
-  const [tokenBalance, setTokenBalance] = React.useState(10);
+  const [tokenBalance, setTokenBalance] = React.useState(0);
   const [amountToBuy, setAmountToBuy] = React.useState(0);
+
+  React.useState(() => {
+    balanceOf(contractAddress).then(
+    (result) => {
+      // console.log(result);
+      setTokenBalance(result);
+    }
+    );
+  }, [])
 
   return (
     <Container component="main" maxWidth="xs">

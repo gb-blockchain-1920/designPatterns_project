@@ -3,7 +3,7 @@ exports.construct_params= [100,100]
 exports.owner= "0x00"
 exports.address =  "0xcfeb869f69431e42cdb54a4f4f105c19c080a601"
 exports.fixed_call= {
-	from: "0x0000",
+	// from: "0x0000",
 	gas: 3000000,
 	gasPrice: 400000
 }

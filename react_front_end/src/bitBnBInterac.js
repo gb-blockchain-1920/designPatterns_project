@@ -7,7 +7,7 @@ const contract= new web3.eth.Contract(
     con.address
 )
 web3.eth.getAccounts().then(res=>{
-    
+
 }).catch(err=>{
     console.error('Error:',err.message)
 })
@@ -29,9 +29,9 @@ exports.transferFrom= async function (from, to , value){
     if (isAddress(from) && isAddress(to) && (from != to)) {
            if(isValidValue(value)){
         return new Promise((resolve,reject)=>{
-        let result 
+        let result
          contract.methods.transferFrom(from,to,value).send(con.fixed_call).then(()=>{
-            
+
 
             contract.methods.transferFrom(from,to,value).call(con.sendfixed_call).then(res=>{
              result=res
@@ -39,11 +39,11 @@ exports.transferFrom= async function (from, to , value){
             }).catch(err=>{
                console.error(err)
             })
-            
+
          }).catch(err=>{
              reject(err.message + "\nError: Transcation unsuccesful")
          })
-         
+
         })
         }
            else
@@ -70,16 +70,16 @@ exports.bid= async function (week, amount){
                 })
             }).catch(err=>{
                 reject(err.message + "\nError: Transcation unsuccesful")
-            }) 
-          })  
+            })
+          })
    }
    else
    console.error('Error: ', 'Invalid args (week>=1, amount>=1)')
 }
 
 
-// Function to withdraw amount from the contract 
-// Only the owner can call this function 
+// Function to withdraw amount from the contract
+// Only the owner can call this function
 exports.withdraw=async function (){
     return new Promise((resolve, reject) => {
         let result
@@ -89,8 +89,8 @@ exports.withdraw=async function (){
             console.log(res)
         }).catch(err=>{
             reject(err.message + "\nError: Transcation unsuccesful")
-        }) 
-      })  
+        })
+      })
 }
 
 
@@ -104,16 +104,16 @@ exports.totalSupply=async function(){
             console.log(res)
         }).catch(err=>{
             reject(err.message + "\nError: Transcation unsuccesful")
-        }) 
-      })  
-   
+        })
+      })
+
 }
 
 // Function to get balance of the address provided
 exports.balanceOf=async function(address){
     if(isAddress(address)){
     return new Promise((resolve,reject)=>{
-        let result 
+        let result
         contract.methods.balanceOf(address).call(con.fixed_call).then(res=>{
             result=res
             resolve(result)
@@ -130,7 +130,7 @@ exports.balanceOf=async function(address){
 exports.allowance=async function(owner, spender){
  if(isAddress(owner)&& isAddress(spender)&& owner != spender){
    return new Promise((resolve,reject)=>{
-       let result 
+       let result
        contract.methods.allowance(owner,spender).call(con.fixed_call).then(res=>{
            result=res
            resolve(result)
@@ -143,7 +143,7 @@ exports.allowance=async function(owner, spender){
  console.error('Error: Invalid addresses')
 }
 
-// Function calls the approve function in the contract 
+// Function calls the approve function in the contract
 exports.approve=async function(spender, value){
        if (isAddress(spender) && Number(value) > 1){
             contract.methods.approve(spender,value).send(con.fixed_call).then(()=>{
@@ -188,7 +188,7 @@ exports.transfer=async function(to, value){
 }
 
 
-// Function to call the toggleBidding transcation in the contract 
+// Function to call the toggleBidding transcation in the contract
 exports.toggleBidding= async function(){
     return new Promise((resolve,reject)=>{
         let result
@@ -201,7 +201,7 @@ exports.toggleBidding= async function(){
     })
 }
 
-// Function to call the fallback function 
+// Function to call the fallback function
 exports.fallback=async function(value){
     if(Number(value)>0){
     return new Promise((resolve,reject)=>{
