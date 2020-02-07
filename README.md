@@ -26,6 +26,7 @@ Instructions (assuming `npm install` has been run in the `react_front_end` and `
 Notes:
 - the biggest challenge in this project was syncing data from the solidity back end (if there was more time, a server would have been useful to implement)
 - in this case, if something has not updated, try refreshing the page
+- sometimes the contract address changes, this can be fixed by changing the `address` parameter inside `bitBnBParams.js`
 
 ---
 

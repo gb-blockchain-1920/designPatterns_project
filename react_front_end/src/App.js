@@ -82,7 +82,7 @@ const App = () => {
     return () => {
       clearInterval(timer);
     };
-  }, [endTime]);
+  }, [endTime, userAddress]);
 
   //on page load retrieve the ethereume addres from metamask
   let ethereum = window.ethereum;
