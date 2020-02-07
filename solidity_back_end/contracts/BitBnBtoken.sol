@@ -29,11 +29,21 @@ contract BitBnBtoken is IERC20 {
       address _address;
       uint256 _amount;
   }
+
+  //used to track weeks the user has bid on to efficiently clear them later
+  struct bidderWeek {
+      uint256 _week;
+      address _address;
+  }
+  bidderWeek[] private bidHistory;
+
   mapping (uint256 => mapping (address => uint256)) public currentBid; //tracks the current bid for each user for each week
   mapping (uint256 => Bid) public highestBid; //tracks the highest bid per week (user + amount)
   address payable public contractOwner;
   uint256 public etherRate;
   uint256 private rate;
+  address[] private users;
+  uint256 private weeksInSeason; //NOTE: weeks are 0 indexed
 
   modifier onlyOwner {
       require(msg.sender == contractOwner, "only owner");
@@ -49,6 +59,10 @@ contract BitBnBtoken is IERC20 {
       _totalSupply = _shares;
       etherRate = _etherRate;
       rate = _etherRate.mul(1e18); //rate => x ether = 1 token
+      openVoting = true;
+      weeksInSeason = 13;
+
+      endTime = block.timestamp + 120; //two minutes cycle
   }
 
   //method for purchasing tokens
@@ -57,6 +71,11 @@ contract BitBnBtoken is IERC20 {
       uint256 bids = msg.value.div(rate);
       require(bids <= _balances[address(this)], "not enough bids to purchase");
       uint256 remainder = msg.value.sub(bids.mul(rate));
+
+      //add user to list if new
+      if (_balances[msg.sender] == 0) {
+          users.push(msg.sender);
+      }
 
       //similar to transfer functionality
       _balances[address(this)] = _balances[address(this)].sub(bids); //reduce contract token balance
@@ -73,10 +92,18 @@ contract BitBnBtoken is IERC20 {
 
   //method for placing bids
   function bid(uint256 _week, uint256 _amount) external {
+      require(block.timestamp < endTime, "bidding is now closed - if bidding should be open, please call toggleBidding"); //cannot bid even if toggleBidding has not been called
+      require(openVoting == true, "bidding is not open yet");
+      require(_week < weeksInSeason, "invalid week");
       uint256 topBid = highestBid[_week]._amount;
       uint256 newBid = currentBid[_week][msg.sender] + _amount;
       require(_amount <= remainingBids[msg.sender], "not enough bids");
       require(topBid < newBid, "bid does not beat winning bid");
+
+      //indicates the user has bid on a week they have not bid on before
+      if (currentBid[_week][msg.sender] == 0) {
+        bidHistory.push(bidderWeek(_week, msg.sender));
+      }
 
       remainingBids[msg.sender] -= _amount;
       currentBid[_week][msg.sender] = newBid;
@@ -86,6 +113,31 @@ contract BitBnBtoken is IERC20 {
   //method for owner to withdraw money
   function withdraw() onlyOwner external {
      contractOwner.transfer(address(this).balance);
+  }
+
+  //toggle open vs closed bidding seasons (called by the app)
+  function toggleBidding() public {
+      require(block.timestamp > endTime, "cannot toggle bidding - not time yet");
+      if (openVoting == false) {
+          //reset bidding tokens
+          for (uint i = 0; i < users.length; i++) {
+            remainingBids[users[i]] = _balances[users[i]];
+            }
+          //clear top bids
+          for (uint i = 0; i < weeksInSeason; i++) {
+              highestBid[i] = Bid(address(0),0);
+          }
+          //clear bids for each user for each week
+          for (uint j = 0; j < bidHistory.length; j++) {
+              currentBid[bidHistory[j]._week][bidHistory[j]._address] = 0;
+          }
+          openVoting = true; //after bids are reset, open bidding
+      } else {
+          openVoting = false; //close bidding
+      }
+
+      //insert code to call toggleBidding again at endTime
+      endTime = block.timestamp + 120;
   }
 
   /**
@@ -129,6 +181,7 @@ contract BitBnBtoken is IERC20 {
   function transfer(address to, uint256 value) public returns (bool) {
     require(value <= _balances[msg.sender]);
     require(to != address(0));
+    require(openVoting == false, "voting is currently open, transfer is closed"); //transfer between owners is closed during open voting
 
     _balances[msg.sender] = _balances[msg.sender].sub(value);
     _balances[to] = _balances[to].add(value);
@@ -170,6 +223,8 @@ contract BitBnBtoken is IERC20 {
     require(value <= _balances[from]);
     require(value <= _allowed[from][msg.sender]);
     require(to != address(0));
+    require(openVoting == false, "voting is currently open, transfer is closed"); //transfer between owners is closed during open voting
+
 
     _balances[from] = _balances[from].sub(value);
     _balances[to] = _balances[to].add(value);
