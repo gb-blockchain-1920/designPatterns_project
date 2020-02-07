@@ -6,17 +6,19 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
+import metamaskCheck from "./metaMask"
 import {
   remainingBids,
   balanceOf,
   getEndTime,
   toggleBidding,
   getOpenVoting,
+  setAddress,
 } from "./bitBnBInterac";
 
 import PurchasePage from "./components/PurchasePage";
 import BidPage from "./components/BidPage";
-import { metamaskCheck } from "./metaMask";
+// import { metamaskCheck } from "./metaMask";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -38,10 +40,7 @@ const App = () => {
   const [totalShares, setTotalShares] = React.useState(0);
   const [endTime, setEndTime] = React.useState(0);
   const [biddingIsOpen, setBiddingIsOpen] = React.useState();
-  const userAddress = "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1";
-
-  const rows = [...Array(13).keys()];
-  // console.log(rows);
+  const [userAddress, setUserAddress] = React.useState("0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1");
 
   React.useEffect(() => {
     balanceOf(userAddress).then(res => setTotalShares(res));
@@ -51,7 +50,6 @@ const App = () => {
   }, [biddingIsOpen]);
 
   React.useEffect(() => {
-
     const keepUpdated = () => {
       //toggle bidding based on endTime
       const currentTime = Math.floor(Date.now() / 1000);
@@ -80,16 +78,12 @@ const App = () => {
     };
   }, [endTime]);
 
-  const [address, setAddress] = React.useState(undefined);
-
-  //  Hook for calling the metamask check functionality..
-  React.useEffect(() => {
-    let ethereum = window.ethereum;
-      metamaskCheck(ethereum).then((address) => {
-        console.log("Metamask Address: " + address.toString());
-        setAddress(address);
-      });
-  }, []);
+  let ethereum = window.ethereum;
+  metamaskCheck(ethereum).then(address => {
+    console.log("Metamask Address: " + address.toString());
+    setAddress(address);
+    setUserAddress(address);
+  });
 
   return (
     <Router>

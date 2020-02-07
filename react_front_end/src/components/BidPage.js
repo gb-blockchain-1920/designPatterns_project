@@ -174,7 +174,7 @@ const BiddingRow = ({ week, state }) => {
       }
       setWinner(address);
     });
-  }, [userBid, topBid, winner, state]);
+  }, [userBid, topBid, winner, state, week]);
 
   return (
     <TableRow key={`week${week}`}>

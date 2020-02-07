@@ -1,14 +1,13 @@
 // _shares,_EtherPrice
 exports.construct_params= [100,100]
 exports.owner= "0x00"
-exports.address =  "0xcfeb869f69431e42cdb54a4f4f105c19c080a601"
+exports.address =  "0xA94B7f0465E98609391C623d0560C5720a3f2D33"
 exports.fixed_call= {
 	from: "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1",
 	gasLimit: 4700000,
 	gasPrice: 1,
 	gas: 4700000,
 }
-
 
 exports.abi = [
 	{
@@ -54,87 +53,6 @@ exports.abi = [
 		"type": "event"
 	},
 	{
-		"constant": false,
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "spender",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "approve",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_week",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
-				"name": "_amount",
-				"type": "uint256"
-			}
-		],
-		"name": "bid",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [],
-		"name": "toggleBidding",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "transfer",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"anonymous": false,
 		"inputs": [
 			{
@@ -160,49 +78,9 @@ exports.abi = [
 		"type": "event"
 	},
 	{
-		"constant": false,
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "from",
-				"type": "address"
-			},
-			{
-				"internalType": "address",
-				"name": "to",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "value",
-				"type": "uint256"
-			}
-		],
-		"name": "transferFrom",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
 		"payable": true,
 		"stateMutability": "payable",
 		"type": "fallback"
-	},
-	{
-		"constant": false,
-		"inputs": [],
-		"name": "withdraw",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
 	},
 	{
 		"constant": true,
@@ -231,6 +109,32 @@ exports.abi = [
 		"type": "function"
 	},
 	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "spender",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "approve",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"constant": true,
 		"inputs": [
 			{
@@ -249,6 +153,26 @@ exports.abi = [
 		],
 		"payable": false,
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_week",
+				"type": "uint256"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "bid",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
@@ -385,6 +309,15 @@ exports.abi = [
 		"type": "function"
 	},
 	{
+		"constant": false,
+		"inputs": [],
+		"name": "toggleBidding",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"constant": true,
 		"inputs": [],
 		"name": "totalSupply",
@@ -397,6 +330,72 @@ exports.abi = [
 		],
 		"payable": false,
 		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "transfer",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"internalType": "address",
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "transferFrom",
+		"outputs": [
+			{
+				"internalType": "bool",
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [],
+		"name": "withdraw",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
 		"type": "function"
 	}
 ]

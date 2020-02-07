@@ -11,3 +11,5 @@ export const metamaskCheck = async (ethereum) => {
       return undefined;
     }
   };
+
+export default metamaskCheck;
