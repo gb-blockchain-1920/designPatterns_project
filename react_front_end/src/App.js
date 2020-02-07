@@ -9,6 +9,7 @@ import Typography from "@material-ui/core/Typography";
 
 import PurchasePage from "./components/PurchasePage";
 import BidPage from "./components/BidPage";
+import { metamaskCheck } from "./metaMask";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -24,10 +25,22 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const App = () => {
+  
   const classes = useStyles();
-
+  
   const [balance, setBalance] = React.useState(1);
   const [totalShares, setTotalShares] = React.useState(1);
+
+  const [address, setAddress] = React.useState(undefined);
+  
+  //  Hook for calling the metamask check functionality..
+  React.useEffect(() => {
+    let ethereum = window.ethereum;
+      metamaskCheck(ethereum).then((address) => {
+        console.log("Metamask Address: " + address.toString());
+        setAddress(address);
+      });
+  }, []);
 
   return (
     <Router>
