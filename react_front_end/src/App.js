@@ -16,6 +16,7 @@ import {
 
 import PurchasePage from "./components/PurchasePage";
 import BidPage from "./components/BidPage";
+import { metamaskCheck } from "./metaMask";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -78,6 +79,17 @@ const App = () => {
       clearInterval(timer);
     };
   }, [endTime]);
+
+  const [address, setAddress] = React.useState(undefined);
+
+  //  Hook for calling the metamask check functionality..
+  React.useEffect(() => {
+    let ethereum = window.ethereum;
+      metamaskCheck(ethereum).then((address) => {
+        console.log("Metamask Address: " + address.toString());
+        setAddress(address);
+      });
+  }, []);
 
   return (
     <Router>
