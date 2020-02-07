@@ -40,6 +40,7 @@ export default function PurchasePage() {
     );
   }, [])
 
+  //callback for puchase bids
   const purchaseBids = (event) => {
     // event.preventDefault();
     fallback(String(amountToBuy)); //send amount to callback

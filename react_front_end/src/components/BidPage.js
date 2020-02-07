@@ -38,20 +38,22 @@ const useStyles = makeStyles(theme => ({
 export default function BidPage({ time, state }) {
   const classes = useStyles();
 
+  //states for tracking bids
   const [amountToBid, setAmountToBid] = React.useState(0);
   const [bidWeek, setBidWeek] = React.useState(1);
-  const [msg, setMsg] = React.useState("");
+  const [msg, setMsg] = React.useState(""); //any error messages will be sent here
 
   // const rows = [createData(1, 20, 30, true), createData(2, 25, 32, false)];
-  const rows = [...Array(13).keys()];
+  const rows = [...Array(13).keys()]; //array with [0, 13) for iterating
 
+  //place bid callback
   const placeBid = (event) => {
-    event.preventDefault();
+    event.preventDefault(); //prevents an automatic refresh
     if (amountToBid < 1) {
-      setMsg("Bid must be greater than 0");
+      setMsg("Bid must be greater than 0"); //displays error if condition met
     } else {
-      bid(bidWeek - 1, amountToBid);
-      window.location.reload();
+      bid(bidWeek - 1, amountToBid); //sends bid to backend
+      window.location.reload(); //reloads page to refresh all numbers
     }
   };
 
@@ -155,17 +157,21 @@ export default function BidPage({ time, state }) {
   );
 }
 
+//component for each bidding row
 const BiddingRow = ({ week, state }) => {
+  //inputs are week number and if bidding is open or closed
+
   const [userBid, setUserBid] = React.useState(0);
   const [topBid, setTopBid] = React.useState(0);
   const [winner, setWinner] = React.useState("N/A");
 
+  //useeffect mainly triggered by state change in open/closed bidding
   React.useEffect(() => {
-    //get userBid
+    //get current bid for the user for a given week
     getCurrentBid(week).then(res => setUserBid(res));
 
-    //get topBid
-    //get current winner
+    //get top bid for current week
+    //get current winner for week
     getHighestBid(week).then(res => {
       setTopBid(res._amount);
       let address = res._address;
@@ -193,17 +199,3 @@ const BiddingRow = ({ week, state }) => {
     </TableRow>
   );
 };
-
-// const BiddingRow = ({ data }) => {
-//
-//   return (
-//     <TableRow key={data.name}>
-//       <TableCell component="th" scope="row" key="week">
-//         {data.weekNumber}
-//       </TableCell>
-//       <TableCell align="right" key="userbid">{data.userBid}</TableCell>
-//       <TableCell align="right" key="topbid">{data.maxBid}</TableCell>
-//       <TableCell align="right" key="winner">{data.isOpen ? "Open" : "Closed"}</TableCell>
-//     </TableRow>
-//   );
-// };

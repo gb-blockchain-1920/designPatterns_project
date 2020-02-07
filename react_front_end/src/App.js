@@ -6,14 +6,14 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
-import metamaskCheck from "./metaMask"
+import metamaskCheck from "./metaMask";
 import {
   remainingBids,
   balanceOf,
   getEndTime,
   toggleBidding,
   getOpenVoting,
-  setAddress,
+  setAddress
 } from "./bitBnBInterac";
 
 import PurchasePage from "./components/PurchasePage";
@@ -36,18 +36,22 @@ const useStyles = makeStyles(theme => ({
 const App = () => {
   const classes = useStyles();
 
-  const [balance, setBalance] = React.useState(0);
-  const [totalShares, setTotalShares] = React.useState(0);
-  const [endTime, setEndTime] = React.useState(0);
-  const [biddingIsOpen, setBiddingIsOpen] = React.useState();
-  const [userAddress, setUserAddress] = React.useState("0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1");
+  //various states
+  const [balance, setBalance] = React.useState(0); //user balance for the current period
+  const [totalShares, setTotalShares] = React.useState(0); //total bids that the user has purchased
+  const [endTime, setEndTime] = React.useState(0); //endtime for current open or closed voting period
+  const [biddingIsOpen, setBiddingIsOpen] = React.useState(); //boolean for if voting is open or closed
+  const [userAddress, setUserAddress] = React.useState(
+    "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1"
+  ); //user account that is retrieved from metamask or uses default ganache-cli -d account
 
+  //use effect that manages the header numbers (triggered when the bidding is opened/closed)
   React.useEffect(() => {
     balanceOf(userAddress).then(res => setTotalShares(res));
     remainingBids(userAddress).then(res => setBalance(res));
     getEndTime().then(res => setEndTime(parseInt(res)));
     getOpenVoting().then(res => setBiddingIsOpen(res));
-  }, [biddingIsOpen]);
+  }, [biddingIsOpen, userAddress]);
 
   React.useEffect(() => {
     const keepUpdated = () => {
@@ -59,7 +63,7 @@ const App = () => {
         setTimeout(() => {
           getEndTime().then(res => setEndTime(parseInt(res)));
           getOpenVoting().then(res => setBiddingIsOpen(res));
-        }, 250);
+        }, 250); //timeout is used because toggleBidding takes a split second to propagate on the ganache server
       }
 
       //update user balances every seconds
@@ -69,6 +73,8 @@ const App = () => {
       }
     };
 
+    //run the keepupdated function every second
+    //sometimes runs too quickly and can run-up on the first call, but the back-end will reject the call
     const timer = setInterval(() => {
       keepUpdated();
     }, 1000);
@@ -78,6 +84,7 @@ const App = () => {
     };
   }, [endTime]);
 
+  //on page load retrieve the ethereume addres from metamask
   let ethereum = window.ethereum;
   metamaskCheck(ethereum).then(address => {
     console.log("Metamask Address: " + address.toString());
