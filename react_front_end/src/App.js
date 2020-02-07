@@ -6,6 +6,14 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
+import {
+  remainingBids,
+  balanceOf,
+  getEndTime,
+  toggleBidding,
+  getOpenVoting,
+  getHighestBid
+} from "./bitBnBInterac";
 
 import PurchasePage from "./components/PurchasePage";
 import BidPage from "./components/BidPage";
@@ -26,8 +34,51 @@ const useStyles = makeStyles(theme => ({
 const App = () => {
   const classes = useStyles();
 
-  const [balance, setBalance] = React.useState(1);
-  const [totalShares, setTotalShares] = React.useState(1);
+  const [balance, setBalance] = React.useState(0);
+  const [totalShares, setTotalShares] = React.useState(0);
+  const [endTime, setEndTime] = React.useState(0);
+  const [biddingIsOpen, setBiddingIsOpen] = React.useState();
+  const userAddress = "0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1";
+
+  const rows = [...Array(13).keys()];
+  // console.log(rows);
+
+  React.useEffect(() => {
+    balanceOf(userAddress).then(res => setTotalShares(res));
+    remainingBids(userAddress).then(res => setBalance(res));
+    getEndTime().then(res => setEndTime(parseInt(res)));
+    getOpenVoting().then(res => setBiddingIsOpen(res));
+  }, []);
+
+  React.useEffect(() => {
+
+    const keepUpdated = () => {
+      //toggle bidding based on endTime
+      const currentTime = Math.floor(Date.now() / 1000);
+      if (currentTime > endTime && endTime !== 0) {
+        console.log("bidding toggled");
+        toggleBidding();
+        setTimeout(() => {
+          getEndTime().then(res => setEndTime(parseInt(res)));
+          getOpenVoting().then(res => setBiddingIsOpen(res));
+        }, 250);
+      }
+
+      //update user balances every seconds
+      if (currentTime % 10 === 0) {
+        balanceOf(userAddress).then(res => setTotalShares(res));
+        remainingBids(userAddress).then(res => setBalance(res));
+      }
+    };
+
+    const timer = setInterval(() => {
+      keepUpdated();
+    }, 1000);
+
+    return () => {
+      clearInterval(timer);
+    };
+  }, [endTime]);
 
   return (
     <Router>
@@ -51,7 +102,9 @@ const App = () => {
             {balance === null ? "" : `Bids Remaining This Period: ${balance}`}
           </Typography>
           <Typography className={classes.title}>
-            {totalShares === null ? "" : `Total Shares Per Period: ${totalShares}`}
+            {totalShares === null
+              ? ""
+              : `Total Shares Per Period: ${totalShares}`}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -60,7 +113,7 @@ const App = () => {
           <PurchasePage />
         </Route>
         <Route path="/bid">
-          <BidPage />
+          <BidPage time={endTime} state={biddingIsOpen} />
         </Route>
         <Route path="/">
           <PurchasePage />

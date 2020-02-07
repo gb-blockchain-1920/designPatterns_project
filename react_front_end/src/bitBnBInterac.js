@@ -26,7 +26,7 @@ function isValidValue(value){
 
 // Function to tansfer value from addr1 to addr2
 exports.transferFrom= async function (from, to , value){
-    if (isAddress(from) && isAddress(to) && (from != to)) {
+    if (isAddress(from) && isAddress(to) && (from !== to)) {
            if(isValidValue(value)){
         return new Promise((resolve,reject)=>{
         let result
@@ -41,7 +41,7 @@ exports.transferFrom= async function (from, to , value){
             })
 
          }).catch(err=>{
-             reject(err.message + "\nError: Transcation unsuccesful")
+             reject(err.message + "\nError: Transaction unsuccesful")
          })
 
         })
@@ -69,7 +69,7 @@ exports.bid= async function (week, amount){
                     console.error('Error: ',err)
                 })
             }).catch(err=>{
-                reject(err.message + "\nError: Transcation unsuccesful")
+                reject(err.message + "\nError: Transaction unsuccesful")
             })
           })
    }
@@ -88,7 +88,7 @@ exports.withdraw=async function (){
             resolve(result)
             console.log(res)
         }).catch(err=>{
-            reject(err.message + "\nError: Transcation unsuccesful")
+            reject(err.message + "\nError: Transaction unsuccesful")
         })
       })
 }
@@ -103,7 +103,7 @@ exports.totalSupply=async function(){
             resolve(result)
             console.log(res)
         }).catch(err=>{
-            reject(err.message + "\nError: Transcation unsuccesful")
+            reject(err.message + "\nError: Transaction unsuccesful")
         })
       })
 
@@ -118,7 +118,7 @@ exports.balanceOf=async function(address){
             result=res
             resolve(result)
         }).catch(err=>{
-            reject(err.message + "\nError: Transcation unsuccesful")
+            reject(err.message + "\nError: Transaction unsuccesful")
         })
     })
   }
@@ -128,14 +128,14 @@ exports.balanceOf=async function(address){
 
 // Function alllows to transfer amount from owner to spender
 exports.allowance=async function(owner, spender){
- if(isAddress(owner)&& isAddress(spender)&& owner != spender){
+ if(isAddress(owner)&& isAddress(spender)&& owner !== spender){
    return new Promise((resolve,reject)=>{
        let result
        contract.methods.allowance(owner,spender).call(con.fixed_call).then(res=>{
            result=res
            resolve(result)
        }).catch(err=>{
-        reject(err.message + "\nError: Transcation unsuccesful")
+        reject(err.message + "\nError: Transaction unsuccesful")
        })
    })
  }
@@ -153,7 +153,7 @@ exports.approve=async function(spender, value){
                        result=res
                        resolve(result)
                    }).catch(err=>{
-                       reject(err.message + "\nError: Transcation unsuccesful")
+                       reject(err.message + "\nError: Transaction unsuccesful")
                    })
                 })
             }).catch(err=>{
@@ -176,7 +176,7 @@ exports.transfer=async function(to, value){
                     result=res
                     resolve(result)
                 }).catch(err=>{
-                    reject(err.message + "\nError: Transcation unsuccesful")
+                    reject(err.message + "\nError: Transaction unsuccesful")
                 })
              })
          }).catch(err=>{
@@ -188,7 +188,7 @@ exports.transfer=async function(to, value){
 }
 
 
-// Function to call the toggleBidding transcation in the contract
+// Function to call the toggleBidding Transaction in the contract
 exports.toggleBidding= async function(){
     return new Promise((resolve,reject)=>{
         let result
@@ -196,7 +196,7 @@ exports.toggleBidding= async function(){
             result=res
             resolve(result)
         }).catch(err=>{
-            reject(err.message + "\nError: Transcation unsuccesful")
+            reject(err.message + "\nError: Transaction unsuccesful")
         })
     })
 }
@@ -207,17 +207,75 @@ exports.fallback=async function(value){
     return new Promise((resolve,reject)=>{
         let result
         web3.eth.sendTransaction({
+            ...con.fixed_call,
             to: contract.options.address,
             from: con.fixed_call.from,
-            value: web3.utils.fromWei(value, 'ether')
+            value: web3.utils.toWei(value, 'ether'),
+            data: "0x00"
         }).then(res=>{
             result=res
             resolve(result)
         }).catch(err=>{
-            reject(err.message + "\nError: Transcation unsuccesful")
+            reject(err.message + "\nError: Transaction unsuccesful")
         })
     })
 }
 else
 console.error('Error: Invalid value entered (value> 0)')
+}
+
+// Function to get remainingBids parameter in the contract
+exports.remainingBids=async function(address){
+    if(isAddress(address)){
+    return new Promise((resolve,reject)=>{
+        let result
+        contract.methods.remainingBids(address).call(con.fixed_call).then(res=>{
+            result=res
+            resolve(result)
+        }).catch(err=>{
+            reject(err.message + "\nError: Transaction unsuccesful")
+        })
+    })
+  }
+  else
+    console.error('Error: Invalid address')
+}
+
+// Function to get endTime parameter in the contract
+exports.getEndTime=async function(){
+  return new Promise((resolve,reject)=>{
+      let result
+      contract.methods.endTime().call(con.fixed_call).then(res=>{
+          result=res
+          resolve(result)
+      }).catch(err=>{
+          reject(err.message + "\nError: Transaction unsuccesful")
+      })
+  })
+}
+
+// Function to get endTime parameter in the contract
+exports.getOpenVoting=async function(){
+  return new Promise((resolve,reject)=>{
+      let result
+      contract.methods.openVoting().call(con.fixed_call).then(res=>{
+          result=res
+          resolve(result)
+      }).catch(err=>{
+          reject(err.message + "\nError: Transaction unsuccesful")
+      })
+  })
+}
+
+// Function to get highestBid parameter in the contract
+exports.getHighestBid=async function(week){
+  return new Promise((resolve,reject)=>{
+      let result
+      contract.methods.highestBid(week).call(con.fixed_call).then(res=>{
+          result=res
+          resolve(result)
+      }).catch(err=>{
+          reject(err.message + "\nError: Transaction unsuccesful")
+      })
+  })
 }

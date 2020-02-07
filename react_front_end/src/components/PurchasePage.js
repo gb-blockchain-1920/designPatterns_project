@@ -28,8 +28,9 @@ export default function PurchasePage() {
   const classes = useStyles();
 
   const [tokenBalance, setTokenBalance] = React.useState(0);
-  const [amountToBuy, setAmountToBuy] = React.useState(0);
+  const [amountToBuy, setAmountToBuy] = React.useState("");
 
+  //get balance when page is opened
   React.useState(() => {
     balanceOf(contractAddress).then(
     (result) => {
@@ -38,6 +39,20 @@ export default function PurchasePage() {
     }
     );
   }, [])
+
+  const purchaseBids = (event) => {
+    // event.preventDefault();
+    fallback(String(amountToBuy)); //send amount to callback
+    setAmountToBuy(""); //reset
+
+    //update new available balance
+    balanceOf(contractAddress).then(
+    (result) => {
+      // console.log(result);
+      setTokenBalance(result);
+    }
+    );
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -66,6 +81,8 @@ export default function PurchasePage() {
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick={purchaseBids}
+            disabled={!amountToBuy}
           >
             Buy
           </Button>

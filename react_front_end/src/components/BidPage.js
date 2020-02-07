@@ -33,13 +33,11 @@ const useStyles = makeStyles(theme => ({
 //   return { weekNumber, userBid, maxBid, isOpen };
 // }
 
-export default function BidPage() {
+export default function BidPage({time, state}) {
   const classes = useStyles();
 
-  const [timeLeft, setTimeLeft] = React.useState(1000000);
   const [amountToBid, setAmountToBid] = React.useState(0);
   const [bidWeek, setBidWeek] = React.useState(1);
-  const [openBidding, setOpenBidding] = React.useState(true);
 
   // const rows = [createData(1, 20, 30, true), createData(2, 25, 32, false)];
   const rows = [...Array(13).keys()];
@@ -60,7 +58,7 @@ export default function BidPage() {
               </TableHead>
               <TableBody>
                 {rows.map(row => (
-                  <BiddingRow week={row} />
+                  <BiddingRow key={row} week={row} />
                 ))}
               </TableBody>
             </Table>
@@ -111,14 +109,14 @@ export default function BidPage() {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                disabled={!openBidding}
+                disabled={!state}
               >
                 Bid
               </Button>
               <Typography component="h1" variant="h5" align="center">
                 Time remaining until bidding is{" "}
-                {openBidding ? "closed" : "opened"}:{" "}
-                <Countdown date={Date.now() + timeLeft} />
+                {state ? "closed" : "opened"}:{" "}
+                <Countdown key={time} date={time*1000} />
               </Typography>
             </form>
           </Paper>
